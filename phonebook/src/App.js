@@ -30,7 +30,9 @@ const App = () => {
 
   const filteredPersons = () => {
     return searchKey
-      ? persons.filter((filter) => filter.name.includes(searchKey))
+      ? persons.filter((filter) =>
+          filter.name.toLowerCase().includes(searchKey.toLowerCase())
+        )
       : persons;
   };
 
