@@ -7,6 +7,10 @@ const App = () => {
   const handleAddName = (event) => {
     event.preventDefault();
     let oldPersons = [...persons];
+    if (oldPersons.map((person) => person.name).includes(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
     oldPersons.push({ name: newName });
     setPersons(oldPersons);
     setNewName("");
@@ -29,7 +33,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <div>{person.name}</div>
+        <div key={person.name}>{person.name}</div>
       ))}
     </div>
   );
