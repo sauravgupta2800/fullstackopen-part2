@@ -1,5 +1,58 @@
 import React, { useState } from "react";
 
+const Filter = ({ value, handleChange }) => {
+  return (
+    <div>
+      Filter shown up with:
+      <input value={value} onChange={handleChange} />
+    </div>
+  );
+};
+
+const PersonForm = ({
+  newName,
+  newNumber,
+  handleNameChange,
+  handleNumberChange,
+  handleSubmit,
+}) => {
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        name:
+        <input value={newName} onChange={handleNameChange} />
+      </div>
+      <div>
+        number:
+        <input value={newNumber} onChange={handleNumberChange} />
+      </div>
+      <div></div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const Person = ({ person }) => {
+  return (
+    <div>
+      {person.name}-{person.number}
+    </div>
+  );
+};
+
+const Persons = ({ persons }) => {
+  return (
+    <div>
+      <h2>Numbers</h2>
+      {persons.map((person) => (
+        <Person key={person.name} person={person} />
+      ))}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456" },
@@ -39,40 +92,18 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown up with:
-        <input
-          value={searchKey}
-          onChange={(event) => setSearchKey(event.target.value)}
-        />
-      </div>
-      <form onSubmit={handleAddName}>
-        <div>
-          name:
-          <input
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-        </div>
-        <div>
-          number:
-          <input
-            value={newNumber}
-            onChange={(event) => setNewNumber(event.target.value)}
-          />
-        </div>
-        <div></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {filteredPersons().map((person) => (
-        <div key={person.name}>
-          {person.name}
-          {person.number}
-        </div>
-      ))}
+      <Filter
+        value={searchKey}
+        handleChange={(event) => setSearchKey(event.target.value)}
+      />
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={(event) => setNewName(event.target.value)}
+        handleNumberChange={(event) => setNewNumber(event.target.value)}
+        handleSubmit={handleAddName}
+      />
+      <Persons persons={filteredPersons()} />
     </div>
   );
 };
