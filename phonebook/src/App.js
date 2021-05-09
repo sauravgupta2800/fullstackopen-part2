@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import "./index.css";
 import personService from "./services/persons";
 
 const Filter = ({ value, handleChange }) => {
@@ -7,6 +7,32 @@ const Filter = ({ value, handleChange }) => {
     <div>
       Filter shown up with:
       <input value={value} onChange={handleChange} />
+    </div>
+  );
+};
+
+const SuccessToast = ({ message }) => {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="success">
+      <div>Success:</div>
+      {message}
+    </div>
+  );
+};
+
+const ErrorToast = ({ message }) => {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="error">
+      <div>Error:</div>
+      {message}
     </div>
   );
 };
@@ -65,6 +91,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchKey, setSearchKey] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     personService.getAll().then((persons) => {
@@ -101,6 +129,10 @@ const App = () => {
             setPersons(oldPersons);
             setNewName("");
             setNewNumber("");
+            setSuccess(`Updated`);
+            setTimeout(() => {
+              setSuccess("");
+            }, 3000);
           });
       }
       return;
@@ -112,6 +144,10 @@ const App = () => {
         setPersons(oldPersons);
         setNewName("");
         setNewNumber("");
+        setSuccess(`Created`);
+        setTimeout(() => {
+          setSuccess("");
+        }, 3000);
       });
   };
 
@@ -125,16 +161,26 @@ const App = () => {
 
   const handleDelete = ({ id, name }) => {
     if (window.confirm(`Do you really want to delete ${name}?`)) {
-      personService.delete(id).then(() => {
-        const updatedPerson = persons.filter((person) => person.id !== id);
-        setPersons(updatedPerson);
-      });
+      personService
+        .delete(id)
+        .then(() => {
+          const updatedPerson = persons.filter((person) => person.id !== id);
+          setPersons(updatedPerson);
+        })
+        .catch(() => {
+          setError(`Something went wrong`);
+          setTimeout(() => {
+            setError("");
+          }, 3000);
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessToast message={success} />
+      <ErrorToast message={error} />
       <Filter
         value={searchKey}
         handleChange={(event) => setSearchKey(event.target.value)}
