@@ -79,8 +79,30 @@ const App = () => {
       alert("Name or Number can not be empty");
       return;
     }
-    if (oldPersons.map((person) => person.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+    const oldPersonIdx = persons.findIndex((person) => person.name == newName);
+    if (oldPersonIdx !== -1) {
+      if (
+        window.confirm(
+          `${newName} is already existed in phonebook, replace the old number with new one?`
+        )
+      ) {
+        console.log("oldPersonIdx", oldPersonIdx);
+
+        personService
+          .update(persons[oldPersonIdx].id, {
+            name: newName,
+            number: newNumber,
+          })
+          .then((person) => {
+            oldPersons[oldPersonIdx] = {
+              ...oldPersons[oldPersonIdx],
+              ...person,
+            };
+            setPersons(oldPersons);
+            setNewName("");
+            setNewNumber("");
+          });
+      }
       return;
     }
     personService
