@@ -11,6 +11,10 @@ const Filter = ({ value, handleChange }) => {
   );
 };
 
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
 const PersonForm = ({
   newName,
   newNumber,
@@ -36,20 +40,21 @@ const PersonForm = ({
   );
 };
 
-const Person = ({ person }) => {
+const Person = ({ person, handleDelete }) => {
   return (
     <div>
-      {person.name}-{person.number}
+      {person.name}-{person.number}{" "}
+      <Button text="delete" handleClick={() => handleDelete(person)} />
     </div>
   );
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
   return (
     <div>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.name} person={person} handleDelete={handleDelete} />
       ))}
     </div>
   );
@@ -96,6 +101,15 @@ const App = () => {
       : persons;
   };
 
+  const handleDelete = ({ id, name }) => {
+    if (window.confirm(`Do you really want to delete ${name}?`)) {
+      personService.delete(id).then(() => {
+        const updatedPerson = persons.filter((person) => person.id !== id);
+        setPersons(updatedPerson);
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -110,7 +124,7 @@ const App = () => {
         handleNumberChange={(event) => setNewNumber(event.target.value)}
         handleSubmit={handleAddName}
       />
-      <Persons persons={filteredPersons()} />
+      <Persons persons={filteredPersons()} handleDelete={handleDelete} />
     </div>
   );
 };
