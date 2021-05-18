@@ -107,7 +107,7 @@ const App = () => {
       alert("Name or Number can not be empty");
       return;
     }
-    const oldPersonIdx = persons.findIndex((person) => person.name == newName);
+    const oldPersonIdx = persons.findIndex((person) => person.name === newName);
     if (oldPersonIdx !== -1) {
       if (
         window.confirm(
