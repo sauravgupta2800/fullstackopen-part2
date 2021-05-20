@@ -148,6 +148,13 @@ const App = () => {
         setTimeout(() => {
           setSuccess("");
         }, 3000);
+      })
+      .catch((error) => {
+        console.log("aaa: ", error);
+        setError(`Something went wrong: ${error}`);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
       });
   };
 
